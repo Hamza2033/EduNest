@@ -1,0 +1,182 @@
+<html>
+<head>
+<link rel="stylesheet" href="cssfile.css">
+
+<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+</head>
+<body>
+<div class = "center">
+<h1>creat account</h1>
+<p>______________________________________________________________________</p>
+<p>Enter the details</p>
+<form action="/action_page.php">
+<input id="UserAddress" type="address" ><br>
+</form>
+
+<!-- <form action="/action_page.php">
+    <input id="Password" type="text" ><br>
+    </form> -->
+
+<form action="/action_page.php">
+	<input id="UserName" type="text" ><br>
+	</form>
+
+
+<select id="select">
+<option value="Student">Student</option>
+<option value="CProvider">Course Provider</option>
+</select>
+
+<button class= "button" id= "setMessageButton">
+<!-- onclick ="getvalue()">set secret messege -->
+create
+
+</button>
+
+<!-- <script>
+function getvalue(){
+var x = document.getElementById("field").value; 
+console.log(x);
+}
+</script> -->
+</div>
+
+<script>
+//connect to web3 providor
+if (typeof web3 !== 'undefined') {
+web3 = new Web3(web3.currentProvider);
+} else {
+web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
+}
+
+web3.eth.defaultAccount = web3.eth.accounts[1];
+
+var RemixContract = web3.eth.contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_userAddress",
+				"type": "address"
+			},
+			{
+				"name": "_password",
+				"type": "uint256"
+			},
+			{
+				"name": "_userName",
+				"type": "string"
+			},
+			{
+				"name": "_accountType",
+				"type": "string"
+			}
+		],
+		"name": "createUser",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_userAddress",
+				"type": "address"
+			},
+			{
+				"name": "_password",
+				"type": "uint256"
+			}
+		],
+		"name": "login",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "users",
+		"outputs": [
+			{
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"name": "password",
+				"type": "uint256"
+			},
+			{
+				"name": "accountType",
+				"type": "string"
+			},
+			{
+				"name": "set",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getUserCount",
+		"outputs": [
+			{
+				"name": "count",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "password",
+				"type": "uint256"
+			}
+		],
+		"name": "LoginAttempt",
+		"type": "event"
+	}
+]);
+
+var User = RemixContract.at('0x8fdc15174f933841098a92a55e565a83f2e57df5');
+console.log(User);
+
+$("#setMessageButton").click(function(){
+	User.createUser($("#UserAddress").val(), $("#Password").val(), $("#UserName").val(), $("#select").val());
+});
+//console.log(myMessage);
+User.createUser(function(error, result){
+  if(!error){
+    console.log(result);
+    }
+ else
+   console.error(error);
+ });
+
+</script>
+</body>
+</html>
