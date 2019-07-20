@@ -8,12 +8,12 @@
 </head>
 <body>
 <div class = "center">
-<h1>creat account</h1>
+<h1>create account</h1>
 <p>______________________________________________________________________</p>
 <p>Enter the details</p>
-<form action="/action_page.php">
+<!-- <form action="/action_page.php">
 <input id="UserAddress" type="address" ><br>
-</form>
+</form> -->
 
 <!-- <form action="/action_page.php">
     <input id="Password" type="text" ><br>
@@ -51,20 +51,26 @@ web3 = new Web3(web3.currentProvider);
 web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
 }
 
-web3.eth.defaultAccount = web3.eth.accounts[1];
-
+//web3.eth.defaultAccount = web3.eth.accounts[0];
+//console.log(web3.eth.accounts[$(_userAddress)]);
 var RemixContract = web3.eth.contract([
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "_userAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
 	{
 		"constant": false,
 		"inputs": [
-			{
-				"name": "_userAddress",
-				"type": "address"
-			},
-			{
-				"name": "_password",
-				"type": "uint256"
-			},
 			{
 				"name": "_userName",
 				"type": "string"
@@ -75,24 +81,6 @@ var RemixContract = web3.eth.contract([
 			}
 		],
 		"name": "createUser",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_userAddress",
-				"type": "address"
-			},
-			{
-				"name": "_password",
-				"type": "uint256"
-			}
-		],
-		"name": "login",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -113,10 +101,6 @@ var RemixContract = web3.eth.contract([
 				"type": "string"
 			},
 			{
-				"name": "password",
-				"type": "uint256"
-			},
-			{
 				"name": "accountType",
 				"type": "string"
 			},
@@ -127,6 +111,15 @@ var RemixContract = web3.eth.contract([
 		],
 		"payable": false,
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "login",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -148,13 +141,8 @@ var RemixContract = web3.eth.contract([
 		"inputs": [
 			{
 				"indexed": false,
-				"name": "sender",
+				"name": "",
 				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "password",
-				"type": "uint256"
 			}
 		],
 		"name": "LoginAttempt",
@@ -162,13 +150,18 @@ var RemixContract = web3.eth.contract([
 	}
 ]);
 
-var User = RemixContract.at('0x8fdc15174f933841098a92a55e565a83f2e57df5');
-console.log(User);
-
+var User = RemixContract.at('0xe252b7ccc5236be23e27c5b1b45cb1b0422f984d');
+//console.log(_userAddress);
+const _useraddress = User._userAddress.call();
+//console.log(User);
+//_userAddress = msg.sender;
 $("#setMessageButton").click(function(){
-	User.createUser($("#UserAddress").val(), $("#Password").val(), $("#UserName").val(), $("#select").val());
+	User.createUser($("#UserName").val(), $("#select").val());
+	
 });
+
 //console.log(myMessage);
+//console.log(_userAddress);
 User.createUser(function(error, result){
   if(!error){
     console.log(result);
